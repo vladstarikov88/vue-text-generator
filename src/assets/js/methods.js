@@ -95,3 +95,28 @@ export function strCompare(str1, str2) {
     }
     return x;
 }
+
+export function findnGrams(arr_text, n, frequency) {
+    var arr = arr_text.join('_').split('');
+
+    var bigrams = {};
+    for(let i = 0; i < arr.length - n+1; i++) {
+        let bigr = '';
+        for(let s = 0; s < n; s++) {
+            bigr += arr[i+s]
+        }
+        if(bigr in bigrams) {
+            bigrams[bigr]++;
+        } else{
+            bigrams[bigr] = 0;
+            bigrams[bigr]++;
+        }
+    }
+    if(frequency === true) {
+        for(var key in bigrams) {
+            bigrams[key] = bigrams[key] / arr.length
+        }
+    }
+
+    return bigrams;
+}

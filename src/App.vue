@@ -5,15 +5,23 @@
         <h1>Analysis of the plaintext frequency characteristics</h1>
       </div>
       <box title="Upload text for analysis">
-        <input type="file" lang="en">
+        <upload-input @get-text="getText"></upload-input>
         <div>
-          <input class="small" type="text">
-          <input class="small" type="text">
-          <button>Start</button>
+          <input 
+            class="small" 
+            type="text"
+            placeholder="Text length"
+            v-model.number="text_length">
+          <input 
+            class="small" 
+            type="text"
+            placeholder="Parametr N"
+            v-model.number="n_gram">
+          <button @click="buildText">Start</button>
         </div>
       </box>
-      <box title="Result">
-        {{result_text}}
+      <box v-if="final_text" title="Result">
+        {{final_text}}
       </box>
     </div>
   </div>
@@ -21,14 +29,111 @@
 
 <script>
 import Box from '@/components/Box'
+import UploadInput from '@/components/UploadInput'
+
+import {getRandom, getRandomFull, findnGrams} from '@/assets/js/methods.js'
 export default {
   name: 'app',
   components: {
-    Box
+    Box,
+    UploadInput
   },
   data(){
     return {
-      result_text: null
+      text_length: 40,
+      n_gram: 5,
+      text_obj: null,
+      result_text: '',
+    }
+  },
+  computed: {
+    final_text() {
+      return this.result_text.split('_').join(' ')
+    }
+  },
+  methods: {
+    getText(text) {
+      this.text_obj = text;
+    },
+    buildText() {
+      let arr_text = this.text_obj.arrText;
+      let new_text = '';
+
+      for(let n = 1; n <= this.n_gram; n++) {
+
+        let n_grams_obj = findnGrams(arr_text, this.n_gram, true);
+        console.log()
+        let random = Math.random(),
+            sum = 0,
+            maxRand = 0;
+
+        for(let key in n_grams_obj) {
+            if(key.substr(0, n).indexOf(new_text.slice(-n)) == 0 ){
+                maxRand +=n_grams_obj[key]
+            }
+        }
+
+        maxRand = getRandom(0, maxRand);
+
+        for(let key in n_grams_obj) {
+            if(n == 1) {
+                sum += n_grams_obj[key];
+                if(sum > maxRand) {
+                    new_text = key
+                    break;
+                }
+            } else {
+                if(key.substr(0, n).indexOf(new_text.slice(-n)) == 0 ){
+                    sum += n_grams_obj[key];
+                    if(sum > maxRand) {
+                        new_text += key.slice(-1)
+                        break;
+                    }
+                }
+            }
+        }
+        console.log(new_text)
+
+        let ngram = findnGrams(arr_text, this.n_gram);
+        var prev = this.result_text;
+        
+        for(let u = this.n_gram - 1; u < this.text_length; u++){
+          var m = 0;
+          let sum = 0,
+              maxRand = 0;
+
+          for(let key in ngram) {
+            if(key.indexOf(new_text.slice(-this.n_gram)) == 0) {
+              maxRand += ngram[key]
+            }
+          }
+
+          maxRand = getRandomFull(0, maxRand);
+
+          for(let key in ngram) {
+            if(new_text.slice(-this.n_gram+1) == key.substr(0, this.n_gram-1)) {
+              if(sum <= maxRand) {
+                sum += ngram[key];
+              }
+              if(sum > maxRand) {
+                new_text += key.slice(-1);
+                break;
+              }
+              if(new_text == prev) {
+                m++;
+                console.log('new_text == prev', m)
+                if (m > 5) {
+                  new_text += key.slice(-1);
+                  break;
+                }
+              }
+            }
+          }
+          prev = new_text;
+          this.result_text = new_text
+          console.log(new_text)
+        }
+      }
     }
   }
 }
