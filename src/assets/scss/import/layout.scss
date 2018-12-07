@@ -1,0 +1,19 @@
+body{
+    font-size: 16px;
+    font-family: 'Scada', sans-serif;
+    color: $text;
+    overflow-x: hidden;
+}
+.container{
+    width: 30em;
+    @media(max-width: $xs){
+        width: 33em;
+    }
+    margin: 2em auto;
+    padding: 0 1em;
+    &__header{
+        font-size: 1.7em;
+        margin: 3em 0 1em;
+        color: darken($dark, 10%);
+    }
+}

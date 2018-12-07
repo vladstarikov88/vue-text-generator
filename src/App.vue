@@ -1,28 +1,34 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <div class="container">
+      <div class="container__header">
+        <h1>Analysis of the plaintext frequency characteristics</h1>
+      </div>
+      <box title="Upload text for analysis">
+        <input type="file">
+        <div>
+          <input class="small" type="text">
+          <input class="small" type="text">
+          <button>Start</button>
+        </div>
+      </box>
+      <box title="Result">
+
+      </box>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import Box from '@/components/Box'
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    Box
   }
 }
 </script>
 
 <style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>

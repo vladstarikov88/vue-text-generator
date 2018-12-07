@@ -1,0 +1,19 @@
+/* fonts */
+@import url('https://fonts.googleapis.com/css?family=Scada:400,700&subset=cyrillic');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
+
+/* colors */
+$white: #fff;
+$grey: #757575;
+$text: #444;
+$bg: #f8f8f8;
+
+$green: #41B883;
+$dark-green: darken($green, 10%);
+$dark: #35495E;
+$red: #b00;
+$orange: #e96900;
+
+/* variables */
+$sm: 768px;
+$xs: 600px;

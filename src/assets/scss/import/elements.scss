@@ -1,0 +1,110 @@
+h2{
+    margin: 0 0 1em;
+    font-size: 1.4em;
+    line-height: 1.5rem;
+    color: darken($green, 10%);
+}
+h3{
+    margin: 1.2em 0 .5em;
+    font-size: 1.3em;
+    line-height: 1.4em;
+    color: darken($green, 18%);
+}
+h4{
+    margin: 1.2em 0 0;
+    font-size: 1.2em;
+    line-height: 1.4em;
+}
+p{
+    margin: .2rem 0;
+}
+p, span, li{
+    line-height: 1.5em;
+    font-size: 1.15em;
+}
+ol{
+    list-style-type: decimal;
+    margin-left: 1em;
+}
+ul{
+    list-style-type: urdu;
+    list-style-position: inside;
+}
+label{
+    font-size: 1.2rem;
+}
+button, input{
+    border: 1px solid rgba(0, 0, 0, .5);
+    border-radius: 3px;
+    background: none;
+    font-size: 1em;
+    padding: 3px 8px;
+    margin: .5em 0 0;
+}
+button{
+    margin-top: .5em;
+    margin-right: .5em;
+    // .trs;
+    &:hover{
+        color: lighten($text, 10%);
+        cursor: pointer;
+    }
+}
+input{
+    display: inline-block;
+    margin-right: 1em;
+
+    &[type="checkbox"], &[type="radio"]{
+        margin: .5rem 0;
+    }
+    &+label{
+        margin-right: 1rem;
+    }
+    &.small{
+        width: 8rem;
+    }
+}
+table{
+    width: 100%;
+    text-align: left;
+    tr{
+        td{
+            font-size: 1.15rem;
+            padding: .3em 1em .3em 0;
+        }
+    }
+}
+.pre{
+    background: $bg;
+    code{
+        background: none;
+        white-space: pre;
+        position: relative;
+        left: -8rem
+    }
+}
+code{
+    font-family: "Roboto Mono", courier, monospace;
+    font-size: .8em;
+    padding: 1px 4px;
+    margin: 0 2px;
+    border-radius: 2px;
+    white-space: nowrap;
+    color: $orange;
+    background: $bg;
+
+    user-select: all;
+    pre{
+        white-space: pre;
+    }
+}
+a{
+    font-size: 1em;
+    color: $green;
+    text-decoration: none;
+    &:hover{
+        cursor: pointer;
+        text-decoration: none;
+        border-bottom: 1px solid darken($green, 10%)
+    }
+}
