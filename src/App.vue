@@ -5,7 +5,7 @@
         <h1>Analysis of the plaintext frequency characteristics</h1>
       </div>
       <box title="Upload text for analysis">
-        <input type="file">
+        <input type="file" lang="en">
         <div>
           <input class="small" type="text">
           <input class="small" type="text">
@@ -13,7 +13,7 @@
         </div>
       </box>
       <box title="Result">
-
+        {{result_text}}
       </box>
     </div>
   </div>
@@ -25,6 +25,11 @@ export default {
   name: 'app',
   components: {
     Box
+  },
+  data(){
+    return {
+      result_text: null
+    }
   }
 }
 </script>
