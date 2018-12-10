@@ -64,17 +64,32 @@ export default {
     test() {
       const testPromise = () => {
         return new Promise(resolve => {
-          return setTimeout(() => {
-            resolve('wait')
-          }, 2000)
+          // for(let n = 1; n <= this.n_gram*2; n++) {
+          //   let obj = findnGrams(this.text_obj.arrText, n, true);
+          //   resolve(obj)
+          // }
+          
+          // return setTimeout(() => {
+          //   resolve('x')
+          // }, 2000)
+
+          for(let n = 1; n <= this.n_gram*2; n++) {
+            let obj = findnGrams(this.text_obj.arrText, n, true);
+            return resolve(obj)
+          }
+          // return resolve('x')
         })
       }
 
       this.is_processing = true;
-      testPromise()
-      .then(res => console.log(res))
-      .finally(() => this.is_processing = false)
+      testPromise().then(res => this.result_text = 'the end')
+      .finally(() => {this.is_processing = false})
     },
+
+
+
+
+
     buildText() {
       const promiseText = () => {
         return new Promise((resololve, reject) => {
