@@ -98,12 +98,14 @@ export default {
       // Построение остального текста
       let ngram = findnGrams(arr_text, this.n_gram);
       var prev = '';
-      
-      for(let u = this.n_gram - 1; u < this.text_length; u++){
-        var m = 0;
-        let sum = 0,
-            maxRand = 0;
 
+
+
+      var m = 0,
+          u = 0;
+      let sum = 0,
+          maxRand = 0;
+      while(this.result_text.length < this.text_length) {
         for(let key in ngram) {
           if(key.indexOf(this.result_text.slice(-this.n_gram)) == 0) {
             maxRand += ngram[key]
