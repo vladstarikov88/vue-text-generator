@@ -57,8 +57,6 @@ export default {
     },
     buildText() {
       let arr_text = this.text_obj.arrText;
-      let newText = '';
-
 
       // Построение первых н букв
       for(let n = 1; n <= this.n_gram; n++) {
@@ -69,7 +67,7 @@ export default {
             maxRand = 0;
 
         for(let key in obj) {
-          if(key.substr(0, n).indexOf(newText.slice(-n)) == 0 ){
+          if(key.substr(0, n).indexOf(this.result_text.slice(-n)) == 0 ){
             maxRand +=obj[key]
           }
         }
@@ -80,33 +78,34 @@ export default {
           if(n == 1) {
             sum += obj[key];
             if(sum > maxRand) {
-              newText = key
+              this.result_text = key
               break;
             }
           } else {
-            if(key.substr(0, n).indexOf(newText.slice(-n)) == 0 ){
+            if(key.substr(0, n).indexOf(this.result_text.slice(-n)) == 0 ){
               sum += obj[key];
               if(sum > maxRand) {
-                newText += key.slice(-1)
+                this.result_text += key.slice(-1)
                   break;
               }
             }
           }
         }
-        console.log(newText)
+        console.log(this.result_text)
       }
 
 
       // Построение остального текста
       let ngram = findnGrams(arr_text, this.n_gram);
       var prev = '';
+      
       for(let u = this.n_gram - 1; u < this.text_length; u++){
         var m = 0;
         let sum = 0,
             maxRand = 0;
 
         for(let key in ngram) {
-          if(key.indexOf(newText.slice(-this.n_gram)) == 0) {
+          if(key.indexOf(this.result_text.slice(-this.n_gram)) == 0) {
             maxRand += ngram[key]
           }
         }
@@ -114,25 +113,26 @@ export default {
         maxRand = getRandomFull(0, maxRand);
 
         for(let key in ngram) {
-          if(newText.slice(-this.n_gram+1) == key.substr(0, this.n_gram-1)) {
+          if(this.result_text.slice(-this.n_gram+1) == key.substr(0, this.n_gram-1)) {
             if(sum <= maxRand) {
               sum += ngram[key];
             }
             if(sum > maxRand) {
-              newText += key.slice(-1);
+              this.result_text += key.slice(-1);
               break;
             }
-            if(newText == prev) {
+            if(this.result_text == prev) {
               m++;
+              // u--;
               if (m > 5) {
-                newText += key.slice(-1);
+                this.result_text += key.slice(-1);
                 break;
               }
             }
           }
         }
-        prev = newText;
-        console.log(newText)
+        prev = this.result_text;
+        console.log(this.result_text)
       }
       this.result_text = prev
     }
