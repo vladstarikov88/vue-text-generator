@@ -18,6 +18,10 @@
             placeholder="Parametr N"
             v-model.number="n_gram">
           <button @click="buildText">Start</button>
+          <button @click="test">Test</button>
+        </div>
+        <div>
+          <p>is_processing: {{is_processing}}</p>
         </div>
       </box>
       <box v-if="final_text" title="Result">
@@ -44,6 +48,8 @@ export default {
       n_gram: 5,
       text_obj: null,
       result_text: '',
+
+      is_processing: false
     }
   },
   computed: {
@@ -55,88 +61,110 @@ export default {
     getText(text) {
       this.text_obj = text;
     },
+    test() {
+      const testPromise = () => {
+        return new Promise(resolve => {
+          return setTimeout(() => {
+            resolve('wait')
+          }, 2000)
+        })
+      }
+
+      this.is_processing = true;
+      testPromise()
+      .then(res => console.log(res))
+      .finally(() => this.is_processing = false)
+    },
     buildText() {
-      let arr_text = this.text_obj.arrText;
+      const promiseText = () => {
+        return new Promise((resololve, reject) => {
+          let arr_text = this.text_obj.arrText;
+          let processing_text = ''
 
-      // Построение первых н букв
-      for(let n = 1; n <= this.n_gram; n++) {
-        let obj = findnGrams(arr_text, n, true);
+          // Построение первых н букв
+          for(let n = 1; n <= this.n_gram; n++) {
+            let obj = findnGrams(arr_text, n, true);
 
-        let random = Math.random(),
-            sum = 0,
-            maxRand = 0;
+            let random = Math.random(),
+                sum = 0,
+                maxRand = 0;
 
-        for(let key in obj) {
-          if(key.substr(0, n).indexOf(this.result_text.slice(-n)) == 0 ){
-            maxRand +=obj[key]
-          }
-        }
-
-        maxRand = getRandom(0, maxRand);
-
-        for(let key in obj) {
-          if(n == 1) {
-            sum += obj[key];
-            if(sum > maxRand) {
-              this.result_text = key
-              break;
+            for(let key in obj) {
+              if(key.substr(0, n).indexOf(processing_text.slice(-n)) == 0 ){
+                maxRand +=obj[key]
+              }
             }
-          } else {
-            if(key.substr(0, n).indexOf(this.result_text.slice(-n)) == 0 ){
-              sum += obj[key];
-              if(sum > maxRand) {
-                this.result_text += key.slice(-1)
+
+            maxRand = getRandom(0, maxRand);
+
+            for(let key in obj) {
+              if(n == 1) {
+                sum += obj[key];
+                if(sum > maxRand) {
+                  processing_text = key
                   break;
+                }
+              } else {
+                if(key.substr(0, n).indexOf(processing_text.slice(-n)) == 0 ){
+                  sum += obj[key];
+                  if(sum > maxRand) {
+                    processing_text += key.slice(-1)
+                      break;
+                  }
+                }
               }
             }
+            console.log(processing_text)
           }
-        }
-        console.log(this.result_text)
-      }
 
 
-      // Построение остального текста
-      let ngram = findnGrams(arr_text, this.n_gram);
-      var prev = '';
+          // Построение остального текста
+          let ngram = findnGrams(arr_text, this.n_gram),
+              prev = '',
+              
+              m = 0,
+              u = 0,
 
-
-
-      var m = 0,
-          u = 0;
-      let sum = 0,
-          maxRand = 0;
-      while(this.result_text.length < this.text_length) {
-        for(let key in ngram) {
-          if(key.indexOf(this.result_text.slice(-this.n_gram)) == 0) {
-            maxRand += ngram[key]
-          }
-        }
-
-        maxRand = getRandomFull(0, maxRand);
-
-        for(let key in ngram) {
-          if(this.result_text.slice(-this.n_gram+1) == key.substr(0, this.n_gram-1)) {
-            if(sum <= maxRand) {
-              sum += ngram[key];
-            }
-            if(sum > maxRand) {
-              this.result_text += key.slice(-1);
-              break;
-            }
-            if(this.result_text == prev) {
-              m++;
-              // u--;
-              if (m > 5) {
-                this.result_text += key.slice(-1);
-                break;
+              sum = 0,
+              maxRand = 0;
+          while(processing_text.length < this.text_length) {
+            for(let key in ngram) {
+              if(key.indexOf(processing_text.slice(-this.n_gram)) == 0) {
+                maxRand += ngram[key]
               }
             }
+
+            maxRand = getRandomFull(0, maxRand);
+
+            for(let key in ngram) {
+              if(processing_text.slice(-this.n_gram+1) == key.substr(0, this.n_gram-1)) {
+                if(sum <= maxRand) {
+                  sum += ngram[key];
+                }
+                if(sum > maxRand) {
+                  processing_text += key.slice(-1);
+                  break;
+                }
+                if(processing_text == prev) {
+                  m++;
+                  if (m > 5) {
+                    processing_text += key.slice(-1);
+                    break;
+                  }
+                }
+              }
+            }
+            prev = processing_text;
+            console.log(processing_text)
           }
-        }
-        prev = this.result_text;
-        console.log(this.result_text)
+          resololve(prev)
+        })
       }
-      this.result_text = prev
+
+      this.is_processing = true
+      promiseText()
+      .then(res => this.result_text = res)
+      .finally(() => this.is_processing = false)
     }
   }
 }
