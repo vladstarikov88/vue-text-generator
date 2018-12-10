@@ -57,83 +57,84 @@ export default {
     },
     buildText() {
       let arr_text = this.text_obj.arrText;
-      let new_text = '';
+      let newText = '';
 
+
+      // Построение первых н букв
       for(let n = 1; n <= this.n_gram; n++) {
+        let obj = findnGrams(arr_text, n, true);
 
-        let n_grams_obj = findnGrams(arr_text, this.n_gram, true);
-        console.log()
         let random = Math.random(),
             sum = 0,
             maxRand = 0;
 
-        for(let key in n_grams_obj) {
-            if(key.substr(0, n).indexOf(new_text.slice(-n)) == 0 ){
-                maxRand +=n_grams_obj[key]
-            }
+        for(let key in obj) {
+          if(key.substr(0, n).indexOf(newText.slice(-n)) == 0 ){
+            maxRand +=obj[key]
+          }
         }
 
         maxRand = getRandom(0, maxRand);
 
-        for(let key in n_grams_obj) {
-            if(n == 1) {
-                sum += n_grams_obj[key];
-                if(sum > maxRand) {
-                    new_text = key
-                    break;
-                }
-            } else {
-                if(key.substr(0, n).indexOf(new_text.slice(-n)) == 0 ){
-                    sum += n_grams_obj[key];
-                    if(sum > maxRand) {
-                        new_text += key.slice(-1)
-                        break;
-                    }
-                }
+        for(let key in obj) {
+          if(n == 1) {
+            sum += obj[key];
+            if(sum > maxRand) {
+              newText = key
+              break;
             }
-        }
-        console.log(new_text)
-
-        let ngram = findnGrams(arr_text, this.n_gram);
-        var prev = this.result_text;
-        
-        for(let u = this.n_gram - 1; u < this.text_length; u++){
-          var m = 0;
-          let sum = 0,
-              maxRand = 0;
-
-          for(let key in ngram) {
-            if(key.indexOf(new_text.slice(-this.n_gram)) == 0) {
-              maxRand += ngram[key]
+          } else {
+            if(key.substr(0, n).indexOf(newText.slice(-n)) == 0 ){
+              sum += obj[key];
+              if(sum > maxRand) {
+                newText += key.slice(-1)
+                  break;
+              }
             }
           }
+        }
+        console.log(newText)
+      }
 
-          maxRand = getRandomFull(0, maxRand);
 
-          for(let key in ngram) {
-            if(new_text.slice(-this.n_gram+1) == key.substr(0, this.n_gram-1)) {
-              if(sum <= maxRand) {
-                sum += ngram[key];
-              }
-              if(sum > maxRand) {
-                new_text += key.slice(-1);
+      // Построение остального текста
+      let ngram = findnGrams(arr_text, this.n_gram);
+      var prev = '';
+      for(let u = this.n_gram - 1; u < this.text_length; u++){
+        var m = 0;
+        let sum = 0,
+            maxRand = 0;
+
+        for(let key in ngram) {
+          if(key.indexOf(newText.slice(-this.n_gram)) == 0) {
+            maxRand += ngram[key]
+          }
+        }
+
+        maxRand = getRandomFull(0, maxRand);
+
+        for(let key in ngram) {
+          if(newText.slice(-this.n_gram+1) == key.substr(0, this.n_gram-1)) {
+            if(sum <= maxRand) {
+              sum += ngram[key];
+            }
+            if(sum > maxRand) {
+              newText += key.slice(-1);
+              break;
+            }
+            if(newText == prev) {
+              m++;
+              if (m > 5) {
+                newText += key.slice(-1);
                 break;
               }
-              if(new_text == prev) {
-                m++;
-                console.log('new_text == prev', m)
-                if (m > 5) {
-                  new_text += key.slice(-1);
-                  break;
-                }
-              }
             }
           }
-          prev = new_text;
-          this.result_text = new_text
-          console.log(new_text)
         }
+        prev = newText;
+        console.log(newText)
       }
+      this.result_text = prev
     }
   }
 }
