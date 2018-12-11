@@ -34,7 +34,7 @@
 import Box from '@/components/Box'
 import UploadInput from '@/components/UploadInput'
 
-import {getRandom, getRandomFull, findnGrams} from '@/assets/js/methods.js'
+import {getRandom, getRandomFull, findnGrams} from '@/assets/js/helpers.js'
 export default {
   name: 'app',
   components: {

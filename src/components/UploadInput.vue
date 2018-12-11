@@ -5,8 +5,7 @@
 </template>
 
 <script>
-import Text from '@/assets/js/ClassText.js'
-import {delSymbols} from '@/assets/js/methods.js'
+import {delSymbols} from '@/assets/js/helpers.js'
 export default {
   methods: {
     selectBigText(evt) {
