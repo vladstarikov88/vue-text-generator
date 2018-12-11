@@ -17,8 +17,7 @@
             type="text"
             placeholder="Parametr N"
             v-model.number="n_gram">
-          <button @click="buildText">Start</button>
-          <button @click="test">Test</button>
+          <button @click="start">Start</button>
         </div>
         <div>
           <p>is_processing: {{is_processing}}</p>
@@ -46,9 +45,8 @@ export default {
     return {
       text_length: 40,
       n_gram: 5,
-      text_obj: null,
+      text_arr: null,
       result_text: '',
-
       is_processing: false
     }
   },
@@ -59,125 +57,99 @@ export default {
   },
   methods: {
     getText(text) {
-      this.text_obj = text;
+      this.text_arr = text;
     },
-    test() {
-      const testPromise = () => {
-        return new Promise(resolve => {
-          // for(let n = 1; n <= this.n_gram*2; n++) {
-          //   let obj = findnGrams(this.text_obj.arrText, n, true);
-          //   resolve(obj)
-          // }
-          
-          // return setTimeout(() => {
-          //   resolve('x')
-          // }, 2000)
-
-          for(let n = 1; n <= this.n_gram*2; n++) {
-            let obj = findnGrams(this.text_obj.arrText, n, true);
-            return resolve(obj)
-          }
-          // return resolve('x')
-        })
-      }
-
+    start() {
       this.is_processing = true;
-      testPromise().then(res => this.result_text = 'the end')
-      .finally(() => {this.is_processing = false})
+      setTimeout(() => {
+        this.buildText()
+      }, 10)
     },
-
-
-
-
-
     buildText() {
-      const promiseText = () => {
-        return new Promise((resololve, reject) => {
-          let arr_text = this.text_obj.arrText;
-          let processing_text = ''
+      const promiseText = new Promise((resolve, reject) => {
+        let arr_text = this.text_arr;
+        let processing_text = ''
 
-          // Построение первых н букв
-          for(let n = 1; n <= this.n_gram; n++) {
-            let obj = findnGrams(arr_text, n, true);
+        // Построение первых н букв
+        for(let n = 1; n <= this.n_gram; n++) {
+          let obj = findnGrams(arr_text, n, true);
 
-            let random = Math.random(),
-                sum = 0,
-                maxRand = 0;
-
-            for(let key in obj) {
-              if(key.substr(0, n).indexOf(processing_text.slice(-n)) == 0 ){
-                maxRand +=obj[key]
-              }
-            }
-
-            maxRand = getRandom(0, maxRand);
-
-            for(let key in obj) {
-              if(n == 1) {
-                sum += obj[key];
-                if(sum > maxRand) {
-                  processing_text = key
-                  break;
-                }
-              } else {
-                if(key.substr(0, n).indexOf(processing_text.slice(-n)) == 0 ){
-                  sum += obj[key];
-                  if(sum > maxRand) {
-                    processing_text += key.slice(-1)
-                      break;
-                  }
-                }
-              }
-            }
-            console.log(processing_text)
-          }
-
-
-          // Построение остального текста
-          let ngram = findnGrams(arr_text, this.n_gram),
-              prev = '',
-              
-              m = 0,
-              u = 0,
-
+          let random = Math.random(),
               sum = 0,
               maxRand = 0;
-          while(processing_text.length < this.text_length) {
-            for(let key in ngram) {
-              if(key.indexOf(processing_text.slice(-this.n_gram)) == 0) {
-                maxRand += ngram[key]
+
+          for(let key in obj) {
+            if(key.substr(0, n).indexOf(processing_text.slice(-n)) == 0 ){
+              maxRand +=obj[key]
+            }
+          }
+
+          maxRand = getRandom(0, maxRand);
+
+          for(let key in obj) {
+            if(n == 1) {
+              sum += obj[key];
+              if(sum > maxRand) {
+                processing_text = key
+                break;
+              }
+            } else {
+              if(key.substr(0, n).indexOf(processing_text.slice(-n)) == 0 ){
+                sum += obj[key];
+                if(sum > maxRand) {
+                  processing_text += key.slice(-1)
+                    break;
+                }
               }
             }
+          }
+          console.log(processing_text)
+        }
 
-            maxRand = getRandomFull(0, maxRand);
 
-            for(let key in ngram) {
-              if(processing_text.slice(-this.n_gram+1) == key.substr(0, this.n_gram-1)) {
-                if(sum <= maxRand) {
-                  sum += ngram[key];
-                }
-                if(sum > maxRand) {
+        // Построение остального текста
+        let ngram = findnGrams(arr_text, this.n_gram),
+            prev = '',
+            
+            m = 0,
+            u = 0,
+
+            sum = 0,
+            maxRand = 0;
+        while(processing_text.length < this.text_length) {
+          for(let key in ngram) {
+            if(key.indexOf(processing_text.slice(-this.n_gram)) == 0) {
+              maxRand += ngram[key]
+            }
+          }
+
+          maxRand = getRandomFull(0, maxRand);
+
+          for(let key in ngram) {
+            if(processing_text.slice(-this.n_gram+1) == key.substr(0, this.n_gram-1)) {
+              if(sum <= maxRand) {
+                sum += ngram[key];
+              }
+              if(sum > maxRand) {
+                processing_text += key.slice(-1);
+                break;
+              }
+              if(processing_text == prev) {
+                m++;
+                if (m > 5) {
                   processing_text += key.slice(-1);
                   break;
                 }
-                if(processing_text == prev) {
-                  m++;
-                  if (m > 5) {
-                    processing_text += key.slice(-1);
-                    break;
-                  }
-                }
               }
             }
-            prev = processing_text;
-            console.log(processing_text)
           }
-          resololve(prev)
-        })
-      }
+          prev = processing_text;
+          console.log(processing_text)
+        }
+        resolve(prev)
+      })
 
-      this.is_processing = true
-      promiseText()
+      promiseText
       .then(res => this.result_text = res)
       .finally(() => this.is_processing = false)
     }

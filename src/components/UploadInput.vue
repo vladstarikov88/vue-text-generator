@@ -6,22 +6,21 @@
 
 <script>
 import Text from '@/assets/js/ClassText.js'
+import {delSymbols} from '@/assets/js/methods.js'
 export default {
-    methods: {
-        selectBigText(evt) {
-            let files = evt.target.files;
-            let reader = new FileReader();
-            reader.onload = (theFile => e => {
-                let arrText = e.target.result.split('\n').join(' ').split(' ');
-                let text = new Text(arrText);
-                text.delSymbols();
-                text.toStr();
+  methods: {
+    selectBigText(evt) {
+      let files = evt.target.files;
+      let reader = new FileReader();
+      reader.readAsText(files[0]);
+      reader.onload = (() => e => {
+        let arrText = e.target.result.split('\n').join(' ').split(' ');
+        let text =  delSymbols(arrText);
 
-                this.$emit('get-text', text)
-            })(files[0]);
-            reader.readAsText(files[0]);
-        }
+        this.$emit('get-text', text)
+      })(files[0]);
     }
+  }
 }
 </script>
 

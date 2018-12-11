@@ -120,3 +120,24 @@ export function findnGrams(arr_text, n, frequency) {
 
     return bigrams;
 }
+
+export function delSymbols(arr) {
+  for(var i = 0; i < arr.length; i++) {
+    arr[i] = arr[i].toLowerCase();
+    for(var j = 0; j<arr[i].length; j++) {
+      if ( (arr[i][j].charCodeAt(0) < 'а'.charCodeAt(0) || arr[i][j].charCodeAt(0) > 'я'.charCodeAt(0))) {
+        arr[i] = arr[i].replace(arr[i][j], '');
+        j--;
+      }
+    }
+    if(arr[i] == ''){
+      arr.splice(i, 1);
+      i--;
+    }
+  }
+  return arr.slice();
+}
+
+export function toStr(arr){
+  return arr.join('').substr(0);
+}
