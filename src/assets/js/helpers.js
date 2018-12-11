@@ -32,7 +32,7 @@ export function findnGrams(arr_text, n, frequency) {
 }
 
 export function delSymbols(arr) {
-  for(var i = 0; i < arr.length; i++) {
+    for(var i = 0; i < arr.length; i++) {
     arr[i] = arr[i].toLowerCase();
     for(var j = 0; j<arr[i].length; j++) {
       if ( (arr[i][j].charCodeAt(0) < 'а'.charCodeAt(0) || arr[i][j].charCodeAt(0) > 'я'.charCodeAt(0))) {

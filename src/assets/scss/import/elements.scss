@@ -54,8 +54,11 @@ input{
     display: inline-block;
     margin-right: 1em;
 
-    &[type="checkbox"], &[type="radio"]{
-        margin: .5rem 0;
+    &[type="checkbox"], &[type="radio"], &[type="file"]{
+        margin: 0 0 .5rem;
+    }
+    &[type="file"] {
+        margin-right: 1em;
     }
     &+label{
         margin-right: 1rem;

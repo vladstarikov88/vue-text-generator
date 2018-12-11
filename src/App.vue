@@ -5,7 +5,10 @@
         <h1>Analysis of the plaintext frequency characteristics</h1>
       </div>
       <box title="Upload text for analysis">
-        <upload-input @get-text="getText"></upload-input>
+        <p>Upload file text file in utf-8 russian language</p>
+        <div class="flex">
+          <upload-input @get-text="getText"></upload-input>
+        </div>
         <div>
           <input 
             class="small" 
@@ -46,7 +49,7 @@ export default {
   data(){
     return {
       text_length: 40,
-      n_gram: 5,
+      n_gram: 8,
       text_arr: null,
       result_text: '',
       is_processing: false
