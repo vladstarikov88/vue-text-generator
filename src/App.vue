@@ -19,9 +19,9 @@
             v-model.number="n_gram">
           <button @click="start">Start</button>
         </div>
-        <div>
-          <p>is_processing: {{is_processing}}</p>
-        </div>
+      </box>
+      <box v-if="is_processing" title="Loading...">
+        <loader-circle></loader-circle>
       </box>
       <box v-if="final_text" title="Result">
         {{final_text}}
@@ -32,6 +32,7 @@
 
 <script>
 import Box from '@/components/Box'
+import LoaderCircle from '@/components/LoaderCircle'
 import UploadInput from '@/components/UploadInput'
 
 import {getRandom, getRandomFull, findnGrams} from '@/assets/js/helpers.js'
@@ -39,7 +40,8 @@ export default {
   name: 'app',
   components: {
     Box,
-    UploadInput
+    UploadInput,
+    LoaderCircle
   },
   data(){
     return {
