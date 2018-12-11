@@ -4,6 +4,7 @@
       <div class="container__header">
         <h1>Analysis of the plaintext frequency characteristics</h1>
       </div>
+        <p>The program based on the existing text on Markov chains (the k-gram parameter is set by entering) builds readable (not meaningful) text</p>
       <box title="Upload text for analysis">
         <p>Upload file text file in utf-8 russian language</p>
         <div class="flex">
